@@ -1,10 +1,14 @@
-class HomeController{
-    index(req,res){
-        res.json({
-            TudoFuncionando : true,
-        })
-    };
+import HomeModel from "../models/homeModel";
 
+class HomeController{
+    async index(req,res){
+        
+        const insert = new HomeModel({
+        "titulo":"Testando Inserção de dados.",
+         "nome":"Mongodb no praticando API." })
+        const infos = await insert.inserindoDados();
+        res.send(infos);
+        };
 
 
 }
