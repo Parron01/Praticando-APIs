@@ -26,6 +26,7 @@ class UserController{
 
             const user = await userModel.delete(req.params.email);
             if(!user) throw new Error("Usuário Não Existe.");
+            if(user.email == req.session.user.email) req.session.destroy();
         
             res.json(`Usuário com email [ ${user.email} ] Apagado com Sucesso!`);
             return;
@@ -45,6 +46,7 @@ class UserController{
                 res.json(user.errors);
                 return;
             }
+            req.session.user = user.user;
             res.json(`Usuário logado com Sucesso no sistema!`);
          }  catch (error) {
             console.error("Erro ao fazer login do usuario:", error);
@@ -73,7 +75,7 @@ class UserController{
             const user = new userModel(req.body);
             await user.edit(req.params.email);
         
-            if(user.errors.length > 0) throw new Error("blabalba");
+            if(user.errors.length > 0) throw new Error;
         
             res.json(`Usuário atualizado com Sucesso!`);
             return
@@ -82,6 +84,11 @@ class UserController{
             res.status(500).json({ error: "Erro ao atualizar usuário" });
         }
     };
+
+    logout (req, res) {
+        req.session.destroy();
+        res.json("Usuário deslogado.")
+    }
 
 
 }
